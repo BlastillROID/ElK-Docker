@@ -1,0 +1,31 @@
+filebeat.config:
+  modules:
+    path: ${path.config}/modules.d/*.yml
+    reload.enabled: false
+
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      hints.enabled: true
+
+filebeat.modules:
+    - module: nginx
+      access:
+        enable: true
+        var.paths: ["/nginx/access.log"]
+      error:
+        enable: true
+        var.paths: ["/nginx/error.log"]
+    - module: mongodb
+      log:
+        enable: true
+        var.paths: ["/mongodb/*.log"]
+    - module: system
+  
+processors:
+- add_cloud_metadata: ~
+
+output.elasticsearch:
+  hosts: '${ELASTICSEARCH_HOSTS:elasticsearch:9200}'
+  username: '${ELASTICSEARCH_USERNAME:}'
+  password: '${ELASTICSEARCH_PASSWORD:}'
