@@ -30,7 +30,7 @@ services:
     image: docker.elastic.co/logstash/logstash:7.2.0
     environment:
       - "xpack.monitoring.elasticsearch.password=changeme"
-    volumes:
+    volume:
       - ./stackconfig/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     ports:
       - 5000:5000
@@ -60,7 +60,7 @@ services:
     environment:
       - "-strict.perms=false"
       - 'output.elasticsearch.hosts=["elasticsearch:9200"]'
-    volumes:
+    volume:
       - "./stackconfig/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
@@ -75,7 +75,7 @@ services:
   # Run a short-lived container to set up Logstash.
   setup_logstash:
     image: centos:7
-    volumes:
+    volume:
       - "./stackScripts/setup-logstash.sh:/usr/local/bin/setup-logstash.sh:ro"
     command:
       [
@@ -90,7 +90,7 @@ services:
 
   setup_kibana:
     image: centos:7
-    volumes:
+    volume:
       - "./stackScripts/setup-kibana.sh:/usr/local/bin/setup-kibana.sh:ro"
     command:
       [
