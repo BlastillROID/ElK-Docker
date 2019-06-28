@@ -8,7 +8,7 @@ services:
       - "http.host=0.0.0.0"
       - "transport.host=127.0.0.1"
       - "ELASTIC_PASSWORD=FivePointsTheTalentPool2019" 
-   ports:
+    ports:
       - 9200:9200
 
   kibana:
