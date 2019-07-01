@@ -7,7 +7,7 @@ services:
       - /root/ES_data:/usr/share/elasticsearch/data
     environment:
       - "http.host=0.0.0.0"
-      - "transport.host=0.0.0.0"
+      - "transport.host=127.0.0.1"
       - "http.cors.enable:true"
       - "http.cors.allow-origin:\"*\""
       - "ELASTIC_PASSWORD=FivePointsTheTalentPool2019" 
