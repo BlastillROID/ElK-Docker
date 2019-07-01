@@ -8,6 +8,7 @@ services:
     environment:
       - "http.host=0.0.0.0"
       - "transport.host=127.0.0.1"
+      - "http.cors.enable: true"
       - "ELASTIC_PASSWORD=FivePointsTheTalentPool2019" 
     ports:
       - 9200:9200
@@ -71,6 +72,14 @@ services:
     user: root
     depends_on:
       - "elasticsearch"
+  
+  elastichead:
+    image: mobz/elasticsearch-head:5-alpine
+    ports:
+      - "9100:9100"
+    depends_on:
+      - "elasticsearch"
+      
 
   # Run a short-lived container to set up Logstash.
   setup_logstash:
