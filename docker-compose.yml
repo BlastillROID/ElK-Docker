@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 version: "3"
 services:
   elasticsearch:
@@ -7,16 +8,15 @@ services:
     environment:
       - "http.host=0.0.0.0"
       - "transport.host=127.0.0.1"
-      - "http.cors.enabled: true"
-      - "ELASTIC_PASSWORD=changeme"
+      - "ELASTIC_PASSWORD=FivePointsTheTalentPool2019" 
     ports:
       - 9200:9200
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.2.0
     environment:
-      - ELASTICSEARCH_USERNAME=kibana
-      - ELASTICSEARCH_PASSWORD=chageme
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=FivePointsTheTalentPool2019
     ports:
       - "5601:5601"
     depends_on:
@@ -30,7 +30,7 @@ services:
   logstash:
     image: docker.elastic.co/logstash/logstash:7.2.0
     environment:
-      - "xpack.monitoring.elasticsearch.password=changeme"
+      - "xpack.monitoring.elasticsearch.password=FivePointsTheTalent2019"
     volumes:
       - ./stackconfig/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     ports:
@@ -84,7 +84,7 @@ services:
         'cat /usr/local/bin/setup-logstash.sh | tr -d "\r" | bash',
       ]
     environment:
-      - "ELASTIC_PASSWORD=changeme"
+      - "ELASTIC_PASSWORD=FivePointsTheTalentPool2019"
     depends_on:
       - "elasticsearch"
 
@@ -99,6 +99,111 @@ services:
         'cat /usr/local/bin/setup-kibana.sh | tr -d "\r" | bash',
       ]
     environment:
-      - "ELASTIC_PASSWORD=changeme"
+      - "ELASTIC_PASSWORD=FivePointsTheTalentPool2019"
     depends_on:
       - "elasticsearch"
+=======
+version: "3"
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
+    volumes:
+      - /root/ES_data:/usr/share/elasticsearch/data
+    environment:
+      - "http.host=0.0.0.0"
+      - "transport.host=127.0.0.1"
+      - "ELASTIC_PASSWORD=FivePointsTheTalentPool2019" 
+    ports:
+      - 9200:9200
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.2.0
+    environment:
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=FivePointsTheTalentPool2019
+    ports:
+      - "5601:5601"
+    depends_on:
+      - "elasticsearch"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5601"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.2.0
+    environment:
+      - "xpack.monitoring.elasticsearch.password=FivePointsTheTalent2019"
+    volumes:
+      - ./stackconfig/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    ports:
+      - 5000:5000
+    depends_on:
+      - "elasticsearch"
+      - "setup_logstash"
+
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:7.2.0
+    environment:
+      - 'output.elasticsearch.hosts=["elasticsearch:9200"]'
+    volumes:
+      - "./stackconfig/metricbeat.docker.yml:/usr/share/metricbeat/metricbeat.yml:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro"
+      - "/proc:/hostfs/proc:ro"
+      - "/:/hostfs:ro"
+    # ports:
+    # - 5000:5000
+    user: root
+    depends_on:
+      - "elasticsearch"
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.2.0
+    environment:
+      - "-strict.perms=false"
+      - 'output.elasticsearch.hosts=["elasticsearch:9200"]'
+    volumes:
+      - "./stackconfig/filebeat.docker.yml:/usr/share/filebeat/filebeat.docker.yml:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
+      - "/var/log/nginx:/nginx/:ro"
+      - "/var/log/mongodb/:/mongodb/:ro"
+    # ports:
+    # - 5000:5000
+    user: root
+    depends_on:
+      - "elasticsearch"
+
+  # Run a short-lived container to set up Logstash.
+  setup_logstash:
+    image: centos:7
+    volumes:
+      - "./stackScripts/setup-logstash.sh:/usr/local/bin/setup-logstash.sh:ro"
+    command:
+      [
+        "/bin/bash",
+        "-c",
+        'cat /usr/local/bin/setup-logstash.sh | tr -d "\r" | bash',
+      ]
+    environment:
+      - "ELASTIC_PASSWORD=FivePointsTheTalentPool2019"
+    depends_on:
+      - "elasticsearch"
+
+  setup_kibana:
+    image: centos:7
+    volumes:
+      - "./stackScripts/setup-kibana.sh:/usr/local/bin/setup-kibana.sh:ro"
+    command:
+      [
+        "/bin/bash",
+        "-c",
+        'cat /usr/local/bin/setup-kibana.sh | tr -d "\r" | bash',
+      ]
+    environment:
+      - "ELASTIC_PASSWORD=FivePointsTheTalentPool2019"
+    depends_on:
+      - "elasticsearch"
+>>>>>>> 291c5833864a442c70dd24856d9400b8129b5a7b
