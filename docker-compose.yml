@@ -4,7 +4,7 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
     volumes:
-      - /root/ES_data:/usr/share/elasticsearch/data
+      - ./ES_data:/usr/share/elasticsearch/data
     environment:
       - "http.host=0.0.0.0"
       - "transport.host=127.0.0.1"
