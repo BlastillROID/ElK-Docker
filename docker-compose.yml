@@ -10,15 +10,15 @@ services:
       - "transport.host=127.0.0.1"
       - "http.cors.enable:true"
       - "http.cors.allow-origin:\"*\""
-      - "ELASTIC_PASSWORD=FivePointsTheTalentPool2019" 
+      - "ELASTIC_PASSWORD=changeme" 
     ports:
       - 127.0.0.1:9200:9200
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.2.0
     environment:
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=FivePointsTheTalentPool2019
+      - ELASTICSEARCH_USERNAME=kibana
+      - ELASTICSEARCH_PASSWORD=changeme
     ports:
       - "5601:5601"
     depends_on:
@@ -94,7 +94,7 @@ services:
         'cat /usr/local/bin/setup-logstash.sh | tr -d "\r" | bash',
       ]
     environment:
-      - "ELASTIC_PASSWORD=FivePointsTheTalentPool2019"
+      - "ELASTIC_PASSWORD=changeme"
     depends_on:
       - "elasticsearch"
 
@@ -109,6 +109,6 @@ services:
         'cat /usr/local/bin/setup-kibana.sh | tr -d "\r" | bash',
       ]
     environment:
-      - "ELASTIC_PASSWORD=FivePointsTheTalentPool2019"
+      - "ELASTIC_PASSWORD=changeme"
     depends_on:
       - "elasticsearch"
